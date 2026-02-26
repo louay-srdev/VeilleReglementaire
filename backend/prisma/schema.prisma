@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id           String    @id @default(uuid())
+  companyName  String
+  sector       String?
+  logoUrl      String?
+  createdAt    DateTime  @default(now())
+  users        User[]
+  compliance   ComplianceMapping[]
+}
+
+model User {
+  id              String       @id @default(uuid())
+  email           String       @unique
+  password        String
+  fullName        String?
+  phone           String?
+  role            Role         @default(CLIENT_USER)
+  clientId        String?
+  client          Client?      @relation(fields: [clientId], references: [id])
+  actionPlans     ActionPlan[] @relation("ResponsibleUser")
+  createdAt       DateTime     @default(now())
+}
+
+enum Role {
+  ADMIN_CYRUS
+  CLIENT_USER
+}
+
+model Regulation {
+  id              String              @id @default(uuid())
+  title           String
+  type            RegType
+  reference       String?
+  ministry        String?
+  authority       String?
+  summary         String?
+  publicationDate DateTime?
+  riskLevel       RiskLevel           @default(MOYEN)
+  fileUrl         String?
+  compliance      ComplianceMapping[]
+}
+
+enum RegType {
+  LOI
+  DECRET
+  ARRETE
+}
+
+enum RiskLevel {
+  FAIBLE
+  MOYEN
+  CRITIQUE
+}
+
+model ComplianceMapping {
+  id             String         @id @default(uuid())
+  clientId       String
+  regulationId   String
+  status         ComplianceStatus @default(EN_COURS)
+  isApplicable   Boolean        @default(true)
+  client         Client         @relation(fields: [clientId], references: [id])
+  regulation     Regulation     @relation(fields: [regulationId], references: [id])
+  actionPlans    ActionPlan[]
+  @@unique([clientId, regulationId])
+}
+
+enum ComplianceStatus {
+  CONFORME
+  NON_CONFORME
+  EN_COURS
+}
+
+model ActionPlan {
+  id                String              @id @default(uuid())
+  complianceId      String
+  description       String
+  responsibleUserId String?
+  targetDate        DateTime
+  completionDate    DateTime?
+  status            ActionStatus        @default(A_FAIRE)
+  efficiencyMeasure String?
+  compliance        ComplianceMapping   @relation(fields: [complianceId], references: [id])
+  responsibleUser   User?               @relation("ResponsibleUser", fields: [responsibleUserId], references: [id])
+}
+
+enum ActionStatus {
+  A_FAIRE
+  EN_COURS
+  REALISEE
+  EN_RETARD
+}
