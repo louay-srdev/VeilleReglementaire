@@ -23,12 +23,22 @@ export class RegulationService {
   }
 
   async findAll(query: QueryRegulationDto) {
-    const { page = 1, limit = 20, type, ministry, authority, riskLevel, search } = query;
+    const {
+      page = 1,
+      limit = 20,
+      type,
+      ministry,
+      authority,
+      riskLevel,
+      domain,
+      search,
+    } = query;
     const where: Prisma.RegulationWhereInput = {};
     if (type) where.type = type;
     if (ministry) where.ministry = ministry;
     if (authority) where.authority = authority;
     if (riskLevel) where.riskLevel = riskLevel;
+    if (domain) where.domain = domain;
     if (search) {
       where.OR = [
         { title: { contains: search, mode: 'insensitive' } },

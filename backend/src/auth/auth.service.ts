@@ -45,6 +45,7 @@ export class AuthService {
         fullName: user.fullName,
         role: user.role,
         clientId: user.clientId,
+        domain: user.domain ?? null,
       },
     };
   }
@@ -71,6 +72,7 @@ export class AuthService {
         role: true,
         clientId: true,
         createdAt: true,
+        domain: true,
       },
     });
     const payload: JwtPayload = {
@@ -96,6 +98,7 @@ export class AuthService {
         role: true,
         clientId: true,
         createdAt: true,
+        domain: true,
         client: {
           select: { id: true, companyName: true, sector: true, logoUrl: true },
         },

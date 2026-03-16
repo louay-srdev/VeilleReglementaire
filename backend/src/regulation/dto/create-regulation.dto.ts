@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsEnum, IsDateString } from 'class-validator';
-import { RegType, RiskLevel } from '@prisma/client';
+import { RegType, RiskLevel, Domain } from '@prisma/client';
 
 export class CreateRegulationDto {
   @IsString()
@@ -31,6 +31,10 @@ export class CreateRegulationDto {
   @IsOptional()
   @IsEnum(RiskLevel)
   riskLevel?: RiskLevel;
+
+  @IsOptional()
+  @IsEnum(Domain)
+  domain?: Domain;
 
   @IsOptional()
   @IsString()

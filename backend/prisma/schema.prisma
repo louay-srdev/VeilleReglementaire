@@ -24,6 +24,7 @@ model User {
   fullName        String?
   phone           String?
   role            Role         @default(CLIENT_USER)
+  domain          Domain?
   clientId        String?
   client          Client?      @relation(fields: [clientId], references: [id])
   actionPlans     ActionPlan[] @relation("ResponsibleUser")
@@ -45,6 +46,7 @@ model Regulation {
   summary         String?
   publicationDate DateTime?
   riskLevel       RiskLevel           @default(MOYEN)
+  domain          Domain?
   fileUrl         String?
   compliance      ComplianceMapping[]
 }
@@ -59,6 +61,13 @@ enum RiskLevel {
   FAIBLE
   MOYEN
   CRITIQUE
+}
+
+enum Domain {
+  QUALITE
+  SECURITE
+  ENVIRONNEMENT
+  SST
 }
 
 model ComplianceMapping {

@@ -1,6 +1,6 @@
 import { IsOptional, IsEnum, IsString, IsInt, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
-import { RegType, RiskLevel } from '@prisma/client';
+import { RegType, RiskLevel, Domain } from '@prisma/client';
 
 export class QueryRegulationDto {
   @IsOptional()
@@ -18,6 +18,10 @@ export class QueryRegulationDto {
   @IsOptional()
   @IsEnum(RiskLevel)
   riskLevel?: RiskLevel;
+
+  @IsOptional()
+  @IsEnum(Domain)
+  domain?: Domain;
 
   @IsOptional()
   @IsString()
